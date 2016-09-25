@@ -5,11 +5,11 @@
 #include <cstring>
 #define YY_DECL extern "C" int yylex()
 
-struct YYLTYPE {  
-  int first_line;  
-  int first_column;  
-  int last_line;  
-  int last_column;  
+struct YYLTYPE {
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
 } yylloc;
 
 static void updateLocation()
@@ -33,7 +33,7 @@ static void updateLocation()
 	}
 
 	yylloc.last_line   = currLine;
-	yylloc.last_column = currCol - 1;
+	yylloc.last_column = currCol;
 }
 
 static void printLocation()
@@ -47,11 +47,10 @@ static void printLocation()
 %}
 
 %%
-
 "{"		{ std::cout << "LBRACE" << "{ "; printLocation(); std::cout << " }"; }
 "}"		{ std::cout << "RBRACE" << "{ "; printLocation(); std::cout << " }"; }
 "/*"((("*"[^/])?)|[^*])*"*/"	{}
-.						{ std::cout << yytext; }
+.		{ std::cout << yytext; }
 
 %%
 extern int YYText();

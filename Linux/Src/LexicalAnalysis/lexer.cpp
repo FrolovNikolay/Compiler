@@ -334,8 +334,8 @@ int yyFlexLexer::yywrap() { return 1; }
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 5
-#define YY_END_OF_BUFFER 6
+#define YY_NUM_RULES 6
+#define YY_END_OF_BUFFER 7
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -345,7 +345,7 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[14] =
     {   0,
-        0,    0,    6,    4,    5,    4,    1,    2,    0,    0,
+        0,    0,    7,    5,    4,    5,    1,    2,    0,    0,
         0,    3,    0
     } ;
 
@@ -421,7 +421,47 @@ static yyconst flex_int16_t yy_chk[21] =
 #line 5 "Src/LexicalAnalysis/lexer.l"
 #include <iostream>
 #include <cstring>
-#line 425 "Src/LexicalAnalysis/lexer.cpp"
+
+struct YYLTYPE {  
+  int first_line;  
+  int first_column;  
+  int last_line;  
+  int last_column;  
+} yylloc;
+
+static void updateLocation( char* yytext )
+{
+	static int currLine = 1;
+	static int currCol  = 1;
+
+	yylloc.first_line = currLine;
+	yylloc.first_column = currCol;
+
+	char * currentSymbol;
+	for( currentSymbol = yytext; *currentSymbol != '\0'; ++currentSymbol ) {
+		if( *currentSymbol == '\n' ) {
+			currLine++;
+			currCol = 1;
+		} else if( *currentSymbol == '\t' ) {
+			currCol += 4;
+		} else {
+			currCol++;
+		}
+	}
+
+	yylloc.last_line   = currLine;
+	yylloc.last_column = currCol;
+}
+
+static void printLocation()
+{
+	std::cout << "{ ";
+	std::cout << yylloc.first_line << ", " << yylloc.first_column << "; ";
+	std::cout << yylloc.last_line << ", " << yylloc.last_column;
+	std::cout << " }";
+}
+
+#line 465 "Src/LexicalAnalysis/lexer.cpp"
 
 #define INITIAL 0
 
@@ -526,10 +566,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 9 "Src/LexicalAnalysis/lexer.l"
+#line 49 "Src/LexicalAnalysis/lexer.l"
 
 
-#line 533 "Src/LexicalAnalysis/lexer.cpp"
+#line 573 "Src/LexicalAnalysis/lexer.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -614,31 +654,37 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "Src/LexicalAnalysis/lexer.l"
-{ std::cout << "LBRACE" << "{ "; std::cout << " }"; }
+#line 51 "Src/LexicalAnalysis/lexer.l"
+{ updateLocation( yytext ); std::cout << "LBRACE"; printLocation(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "Src/LexicalAnalysis/lexer.l"
-{ std::cout << "RBRACE" << "{ "; std::cout << " }"; }
+#line 52 "Src/LexicalAnalysis/lexer.l"
+{ updateLocation( yytext ); std::cout << "RBRACE"; printLocation(); }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 13 "Src/LexicalAnalysis/lexer.l"
-{}
+#line 53 "Src/LexicalAnalysis/lexer.l"
+{ updateLocation( yytext ); }
 	YY_BREAK
 case 4:
+/* rule 4 can match eol */
 YY_RULE_SETUP
-#line 14 "Src/LexicalAnalysis/lexer.l"
-{ std::cout << yytext; }
+#line 54 "Src/LexicalAnalysis/lexer.l"
+{ updateLocation( yytext ); std::cout << yytext; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 16 "Src/LexicalAnalysis/lexer.l"
+#line 55 "Src/LexicalAnalysis/lexer.l"
+{ updateLocation( yytext ); std::cout << yytext; }
+	YY_BREAK
+case 6:
+YY_RULE_SETUP
+#line 57 "Src/LexicalAnalysis/lexer.l"
 ECHO;
 	YY_BREAK
-#line 642 "Src/LexicalAnalysis/lexer.cpp"
+#line 688 "Src/LexicalAnalysis/lexer.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1538,7 +1584,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 16 "Src/LexicalAnalysis/lexer.l"
+#line 57 "Src/LexicalAnalysis/lexer.l"
 
 
 
